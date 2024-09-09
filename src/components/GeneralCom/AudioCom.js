@@ -126,5 +126,6 @@ const AudioCom = forwardRef(({ src, title, name, add, download, del, reciter, on
     </div>
   );
 });
+AudioCom.displayName = 'AudioCom';
 
 export default AudioCom;
