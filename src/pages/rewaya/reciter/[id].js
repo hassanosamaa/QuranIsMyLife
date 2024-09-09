@@ -4,7 +4,7 @@ import { removeSearch } from "@/store/searchSlice";
 import { loading } from "@/utils/loading";
 import { dehydrate, QueryClient, useQuery } from "@tanstack/react-query";
 import axios from "axios";
-import React, { useEffect } from "react";
+import React, { useEffect, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
 const fetch = async (id) => {
@@ -39,6 +39,8 @@ export async function getServerSideProps(context) {
 export default function Reciter_id({ rewaya_reciters_id }) {
   const text = useSelector((state) => state.search.search);
   const dispaych=useDispatch()
+  const audioRefs = useRef([]);
+
   
   // remove search
   useEffect(()=>{
@@ -76,6 +78,14 @@ export default function Reciter_id({ rewaya_reciters_id }) {
     return e
   }})
 
+  const handlePlay = (index) => {
+    audioRefs.current.forEach((audio, i) => {
+      if (i !== index && audio) {
+        audio.pause();
+      }
+    });
+  };
+
   return (
     <div className="bg-colorBack min-h-screen">
       <div className="container mx-auto p-5">
@@ -93,6 +103,8 @@ export default function Reciter_id({ rewaya_reciters_id }) {
                 name={rewaya_reciters[0].moshaf[0].name}
                 add={true}
                 download={true}
+                ref={(el) => (audioRefs.current[i] = el)}
+                onPlay={() => handlePlay(i)}
               />
             );
           })}

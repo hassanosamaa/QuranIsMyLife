@@ -1,7 +1,7 @@
 "use client";
 import { addToCart, removeFromCart } from "@/store/favSlice";
 import Image from "next/image";
-import React, { useRef, useState } from "react";
+import React, { forwardRef, useImperativeHandle, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import play from "/public/play.svg";
 import pause from "/public/pause.svg";
@@ -11,7 +11,7 @@ import IconDel from "/public/del.svg";
 import { motion } from "framer-motion";
 import heardfull from "/public/heardred.svg";
 
-const AudioCom = ({ src, title, name, add, download, del, reciter }) => {
+const AudioCom = forwardRef(({ src, title, name, add, download, del, reciter, onPlay }, ref) => {
   const [isPlaying, setIsPlaying] = useState(false);
   const audioRef = useRef(null);
   const items = useSelector((state) => state.fav.items);
@@ -20,17 +20,26 @@ const AudioCom = ({ src, title, name, add, download, del, reciter }) => {
 
   const dispatch=useDispatch()
              
-  
+  useImperativeHandle(ref, () => ({
+    pause() {
+      audioRef.current.pause();
+      setIsPlaying(false);
+    },
+  }));
+
 
   const togglePlay = () => {
-    if (isPlaying ) {
+    if (isPlaying) {
       audioRef.current.pause();
     } else {
+      audioRef.current.currentTime = 0;
       audioRef.current.play();
-      
+      onPlay(); 
     }
     setIsPlaying(!isPlaying);
   };
+
+
   const handleDownload = () => {
     const link = document.createElement('a');
     link.href = src;
@@ -80,7 +89,7 @@ const AudioCom = ({ src, title, name, add, download, del, reciter }) => {
           onClick={togglePlay}
           className="bg-blue-200 text-white px-4 py-2 rounded-full shadow-lg text-[12px] md:text-[16px]"
         >
-          <Image width={15} height={15} src={isPlaying ? play : pause} alt="state"/>
+          <Image width={15} height={15} src={isPlaying ? pause : play} alt="state"/>
         </motion.button>
 
         {download && (
@@ -116,6 +125,6 @@ const AudioCom = ({ src, title, name, add, download, del, reciter }) => {
       </div>
     </div>
   );
-};
+});
 
 export default AudioCom;

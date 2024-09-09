@@ -4,7 +4,7 @@ import { removeSearch } from "@/store/searchSlice";
 import { loading } from "@/utils/loading";
 import { dehydrate, QueryClient, useQuery } from "@tanstack/react-query";
 import axios from "axios";
-import React, { useEffect } from "react";
+import React, { useEffect, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
 const fetch = async (id) => {
@@ -39,6 +39,9 @@ export async function getServerSideProps(context) {
 export default function Reciter_id({ postId }) {
   const text = useSelector((state) => state.search.search);
   const dispaych=useDispatch()
+  const audioRefs = useRef([]);
+  
+
   
   // remove search
   useEffect(()=>{
@@ -76,6 +79,16 @@ export default function Reciter_id({ postId }) {
   const dataFilter_new_filter= dataFilter_new?.filter((e)=>{if(surah_list_without_zero.includes(e.toString())){
     return e
   }})
+
+
+  // Function to handle play/pause and stop other audios
+  const handlePlay = (index) => {
+    audioRefs.current.forEach((audio, i) => {
+      if (i !== index && audio) {
+        audio.pause();
+      }
+    });
+  };
   
 
   return (
@@ -96,6 +109,8 @@ export default function Reciter_id({ postId }) {
                 title={suwar ? `سورة ${suwar[+e - 1].name}` : ""}
                 add={true}
                 download={true}
+                ref={(el) => (audioRefs.current[i] = el)}
+                onPlay={() => handlePlay(i)}
               />
             );
           })}

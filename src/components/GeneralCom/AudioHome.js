@@ -30,7 +30,7 @@ export default function AudioHome({src}) {
           onClick={togglePlay}
           className="bg-blue-200 flex justify-center items-center text-white p-2 rounded-full shadow-lg w-[50px] h-[50px] md:text-[16px]"
         >
-          <Image className='w-[25px] h-[25px]'  src={isPlaying ? play : pause} alt="state"/>
+          <Image className='w-[25px] h-[25px]'  src={isPlaying ? pause : play} alt="state"/>
         </motion.button>
     </div>
   )

@@ -1,10 +1,12 @@
 import AudioCom from "@/components/GeneralCom/AudioCom";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { useSelector } from "react-redux";
 
 export default function Fav() {
 
   const [isClient, setIsClient] = useState(false);
+  const audioRefs = useRef([]);
+
 
   const items = useSelector((state) => state.fav.items);
 
@@ -15,8 +17,14 @@ export default function Fav() {
   if (!isClient) {
     return null;
   }
-  console.log(items);
-  
+
+  const handlePlay = (index) => {
+    audioRefs.current.forEach((audio, i) => {
+      if (i !== index && audio) {
+        audio.pause();
+      }
+    });
+  };
 
   return (
     <>
@@ -33,6 +41,8 @@ export default function Fav() {
                   title={e.title}
                   add={false}
                   del={true}
+                  ref={(el) => (audioRefs.current[i] = el)}
+                  onPlay={() => handlePlay(i)}
                 />
               );
             })}

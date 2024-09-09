@@ -22,6 +22,7 @@ export async function getServerSideProps(context) {
   }
 }
 export default function Radio_id({ radio_id }) {
+  
   const {
     data: radio,
     isLoading,

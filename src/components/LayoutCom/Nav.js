@@ -5,7 +5,11 @@ import logo from "/public/logo.png";
 import favIcon from "/public/favIcon.png";
 import { useEffect, useState } from "react";
 import { addToSearch } from "@/store/searchSlice";
+import { useRouter } from 'next/router';
+
 export default function Nav() {
+  const router = useRouter();
+
   const countSound = useSelector((state) => state.fav.items);
   const [isClient, setIsClient] = useState(false);
   const dispatch=useDispatch()
@@ -14,6 +18,9 @@ export default function Nav() {
     dispatch(addToSearch(searchChange))
 
   };
+  const isHomePage = router.pathname === '/';
+  
+
 
   useEffect(() => {
     setIsClient(true);
@@ -35,7 +42,8 @@ export default function Nav() {
                 alt="logo"
               />
             </Link>
-            <div>
+            {!isHomePage&&
+            <div >
               <input
                 onChange={handleInputChange}
                 type="text"
@@ -43,7 +51,7 @@ export default function Nav() {
                 className="p-2 w-[185px] md:w-[300px] rounded-md bg-cyan-800 text-gray-200 
                   font-[500] text-[16px] md:text-[20px] outline-0 text-right"
               />
-            </div>
+            </div>}
             <Link href={"/fav"}>
               <div className="relative ">
                 <div className="absolute top-0 left-0 bg-gray-300 rounded-full shadow-sm leading-[20px] md:leading-[30px] text-center w-[20px] h-[20px] md:w-[30px] md:h-[30px]">
