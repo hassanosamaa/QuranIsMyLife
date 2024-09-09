@@ -75,7 +75,14 @@ export default function Askar_id({ askar_id }) {
       <div className="container mx-auto p-4">
         <NameReciter reciter={TITLE} />
         <div className="grid grid-cols-1    gap-[20px] pt-1  ">
-          <AudioCom src={AUDIO_URL} title={TITLE} add={true} download={true} />
+          <AudioCom
+            src={AUDIO_URL}
+            title={TITLE}
+            add={true}
+            download={true}
+            ref={(el) => (audioRefs.current[0] = el)}
+            onPlay={() => handlePlay(0)}
+          />
           {askar_data?.map((e, i) => {
             return (
               <AudioCom
@@ -84,8 +91,8 @@ export default function Askar_id({ askar_id }) {
                 title={e.ARABIC_TEXT}
                 add={false}
                 download={true}
-                ref={(el) => (audioRefs.current[i] = el)}
-                onPlay={() => handlePlay(i)}
+                ref={(el) => (audioRefs.current[i+1] = el)}
+                onPlay={() => handlePlay(i+1)}
               />
             );
           })}
